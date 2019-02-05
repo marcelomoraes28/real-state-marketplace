@@ -33,6 +33,14 @@ def abbreviate_to_decimal(value):
 
 
 def decimal_to_abbreviate(value):
+    """
+    Format float value to abbreviate
+    Eg:
+        739000.0 -> $739K
+        233700000.0 -> $233.7M
+        23300000000.0 -> $23.3B
+
+    """
     if not isinstance(value, float):
         raise HMoneyException("{} must be float".format(str(value)))
 
