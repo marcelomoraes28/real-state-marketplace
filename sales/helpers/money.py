@@ -1,3 +1,4 @@
+import math
 import re
 
 from sales.helpers.exceptions import HMoneyException
@@ -19,16 +20,30 @@ def abbreviate_to_decimal(value):
 
         if nx == 'K':
             v = ''.join(v[0])
-            right_zeros = ['0' for z in range(millnames[nx] - (len(v)+(3-len(v))))]
-            return float(v+(''.join(right_zeros)))
-        elif nx =='M' or nx == 'B':
+            right_zeros = ['0' for z in
+                           range(millnames[nx] - (len(v) + (3 - len(v))))]
+            return float(v + (''.join(right_zeros)))
+        elif nx == 'M' or nx == 'B':
             vx = ''.join(v[0])
-            right_zeros = ['0' for z in range((millnames[nx] - (len(vx)+(3-len(v[0][0])))))]  # noqa
-            return float(vx+(''.join(right_zeros)))
+            right_zeros = ['0' for z in range(
+                (millnames[nx] - (len(vx) + (3 - len(v[0][0])))))]  # noqa
+            return float(vx + (''.join(right_zeros)))
 
     raise HMoneyException("{} is not valid.".format(value))
 
 
 def decimal_to_abbreviate(value):
-    # TODO: its necessary implement convert decimal to abbreviate
-    pass
+    if not isinstance(value, float):
+        raise HMoneyException("{} must be float".format(str(value)))
+
+    list_millnames = list(millnames)
+    list_millnames.insert(0, '')
+
+    millidx = max(0, min(len(list_millnames) - 1, int(
+        math.floor(0 if value == 0 else math.log10(abs(value)) / 3))))
+
+    abbreviate = value / 10 ** (3 * millidx)
+
+    if str(abbreviate)[-1] == '0':
+        return '${:.0f}{}'.format(abbreviate, list_millnames[millidx])
+    return '${:.1f}{}'.format(abbreviate, list_millnames[millidx])
