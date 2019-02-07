@@ -35,8 +35,8 @@ class PriceHistoryModel(BaseBlank, models.Model):
     uuid = models.UUIDField(default=g_uuid.uuid4, editable=False, unique=True)
     sell_price = models.DecimalField(decimal_places=2, max_digits=15)
     rent_price = models.DecimalField(decimal_places=2, blank=True, null=True, max_digits=15)  # noqa
-    last_sold_date = models.DateField(null=True, blank=True)
-    last_sold_price = models.DecimalField(decimal_places=2, blank=True, null=True, max_digits=15)  # noqa
+    last_sold_date = models.DateField(null=True)
+    last_sold_price = models.DecimalField(decimal_places=2, null=True, max_digits=15)  # noqa
 
     @property
     def abbreviate_price(self):
@@ -76,7 +76,7 @@ class ResidenceModel(models.Model):
 
 class ZRentInformationModel(models.Model):
     uuid = models.UUIDField(default=g_uuid.uuid4, editable=False, unique=True)
-    rentzestimate_amount = models.DecimalField(decimal_places=2, max_digits=15, blank=True, null=True)  # noqa
+    rentzestimate_amount = models.DecimalField(decimal_places=2, max_digits=15)
     rentzestimate_last_updated = models.DateField(auto_now=True, blank=True, null=True)  # noqa
 
     class Meta:
@@ -86,7 +86,7 @@ class ZRentInformationModel(models.Model):
 class ZSaleInformationModel(models.Model):
     uuid = models.UUIDField(default=g_uuid.uuid4, editable=False, unique=True)
     zestimate_last_updated = models.DateField(auto_now=True)
-    zestimate_amount = models.DecimalField(decimal_places=2, max_digits=15, null=True)
+    zestimate_amount = models.DecimalField(decimal_places=2, max_digits=15)
 
     class Meta:
         app_label = "sales"
@@ -95,8 +95,8 @@ class ZSaleInformationModel(models.Model):
 class ZillowModel(models.Model):
     uuid = models.UUIDField(default=g_uuid.uuid4, editable=False, unique=True)
     zillow_id = models.IntegerField(unique=True)
-    z_rent_information = models.ForeignKey('ZRentInformationModel', on_delete=models.CASCADE)
-    z_sale_information = models.ForeignKey('ZSaleInformationModel', on_delete=models.CASCADE)
+    z_rent_information = models.ForeignKey('ZRentInformationModel', on_delete=models.CASCADE)  # noqa
+    z_sale_information = models.ForeignKey('ZSaleInformationModel', on_delete=models.CASCADE)  # noqa
 
     class Meta:
         app_label = "sales"
@@ -145,10 +145,10 @@ class AnnouncementModel(models.Model):
         }
         z_sale_information = {
             "zestimate_last_updated": format_date(payload.get('zestimate_last_updated')),  # noqa
-            "zestimate_amount": float(payload.get('zestimate_amount')) if payload.get('zestimate_amount') else None,  # noqa
+            "zestimate_amount": float(payload.get('zestimate_amount')) if payload.get('zestimate_amount') else 0,  # noqa
         }
         z_rent_information = {
-            "rentzestimate_amount": float(payload.get('rentzestimate_amount')) if payload.get('rentzestimate_amount') else None,  # noqa
+            "rentzestimate_amount": float(payload.get('rentzestimate_amount')) if payload.get('rentzestimate_amount') else 0,  # noqa
             "rentzestimate_last_updated": format_date(payload.get('rentzestimate_last_updated')),  # noqa
         }
         tax = {
@@ -165,10 +165,10 @@ class AnnouncementModel(models.Model):
 
         residence = ResidenceModel.objects.get_or_create(**residence)[0]
         tax = TaxModel.objects.get_or_create(**tax)[0]
-        price_history = PriceHistoryModel.objects.get_or_create(**price_history)[0]
+        price_history = PriceHistoryModel.objects.get_or_create(**price_history)[0]  # noqa
         announcement = cls.objects.get_or_create(link=payload.get('link'),
                                                                zillow=zillow,
-                                                               residence=residence,
+                                                               residence=residence,  # noqa
                                                                tax=tax)[0]  # noqa
         announcement.price_history.add(price_history)
 
