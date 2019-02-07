@@ -4,3 +4,7 @@ class HDateException(Exception):
 
 class HMoneyException(Exception):
     pass
+
+
+class Dict_Exception(Exception):
+    pass
