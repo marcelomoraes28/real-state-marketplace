@@ -31,9 +31,9 @@ Activate your env:
     $ source venv/bin/activate
 
 
-Now, you should install dependencies using pip:
+Now, you should install development dependencies using pip:
 
-    $ pip install -r requirements.txt
+    $ pip install -r requirements_dev.txt
 
 Run migrations:
 
@@ -42,6 +42,14 @@ Run migrations:
 Run server in development mode:
 
     $ python manage.py runserver
+
+Import fixtures
+-----
+
+To import fixtures in project:
+
+    $ python manage.py import_data ./fixtures/data.csv
+    $ pytest -v
 
 Tests
 -----
