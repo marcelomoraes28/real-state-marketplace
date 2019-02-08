@@ -2,7 +2,7 @@ Marketplace using DRF
 =======================================
 
 It's a project using DRF to provides some resources to real state marketplace. All documentation about the resources its available in development mode or here:
-http://www.mypy-lang.org/
+https://marketplace-real-state.herokuapp.com/
 
 Requirements
 ------------
