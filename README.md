@@ -49,7 +49,6 @@ Import fixtures
 To import fixtures in project:
 
     $ python manage.py import_data ./fixtures/data.csv
-    $ pytest -v
 
 Tests
 -----
